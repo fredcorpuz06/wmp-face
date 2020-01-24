@@ -1,5 +1,7 @@
 *.pyc
+*.egg-info/
+_build/
 .vscode
 .DS_Store
 env/
-_build/
+deleteme.*
