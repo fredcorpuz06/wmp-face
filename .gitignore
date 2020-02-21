@@ -1,7 +1,10 @@
 *.pyc
-*.egg-info/
-_build/
+*.egg-info
+_build
 .vscode
 .DS_Store
-env/
-deleteme.*
+env
+deleteme*.*
+cmag_vids
+national-politicians
+reference-encoded
