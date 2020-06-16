@@ -1,6 +1,7 @@
 import dlib
-from PIL import Image
+from PIL import Image, ImageDraw
 import numpy as np
+import shutil
 import os
 import pickle
 
@@ -45,12 +46,14 @@ def find_landmarks():
 
 
 class Face:
+    # TODO: draw face landmarks
     def __init__(self, face_image, box):
         self.source_faceimage = face_image
         self.box = box
         self.source_name = self.source_faceimage.source_name
         self.thumbnail_image = self._crop_face()
         self.landmarks = self._find_landmarks()
+        self.thumbnail_landmarks = None
         self.encoding = self._encode_face()
         self.true_name = None
 
@@ -74,6 +77,8 @@ class Face:
 
     def draw_landmarks(self):
         pass
+        # draw = ImageDraw.Draw(self.thumbnail_image)
+        # draw.point()
 
     def assign_name(self):
         f = os.path.split(self.source_name)[1]
@@ -99,6 +104,21 @@ class FaceImage:
         names = [f.true_name for f in self.faces]
         self.true_names = names
         return {"source_name": self.source_name, "recognized_faces": names}
+
+    def write_faces(self, outdir, marked=False):
+        if os.path.exists(outdir):
+            shutil.rmtree(outdir)
+
+        os.makedirs(outdir)
+
+        if marked:
+            for i, face in enumerate(self.faces):
+                fp = os.path.join(outdir, f"{i}.jpg")
+                face.landmarks.save(fp)
+        else:
+            for i, face in enumerate(self.faces):
+                fp = os.path.join(outdir, f"{i}.jpg")
+                face.thumbnail_image.save(fp)
 
 
 class FaceVideo:

@@ -4,7 +4,8 @@ Draw facemarks
 ================
 
 In this example, we will demonstrate how wmp-face finds faces in input 
-images, crops out a face thumbnail and draws "facemarks"
+images, crops out a face thumbnail and
+ draws "facemarks"
 
 """
 
@@ -15,23 +16,15 @@ from wmp import detect, utils
 
 def main():
     IMG = "wmp/datasets/sample_image.jpg"
-    OUT_DIR = "wmp/datasets/sample-facemarks/"
+    OUTDIR = "wmp/datasets/sample-facemarks/"
 
     fd = detect.FaceDetector()  # can be different detectors
 
     face_image = detect.FaceImage(IMG)
-    unknown_faces = fd.find_faces(face_image)
+    face_image_results = fd.find_faces(face_image)
 
-    cropped_faces = [f.thumbnail_image for f in unknown_faces]
-    marked_faces = [f.draw_landmarks() for f in unknown_faces]
-
-    utils.write_images(
-        cropped_faces, folder=OUT_DIR, basename="face_thumbnails", filetype="jpg"
-    )
-
-    utils.write_images(
-        cropped_faces, folder=OUT_DIR, basename="facemarks", filetype="jpg"
-    )
+    face_image_results.write_faces(OUTDIR)
+    # face_image_results.write_faces(OUTDIR, marked=True)
 
 
 if __name__ == "__main__":
