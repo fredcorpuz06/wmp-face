@@ -43,7 +43,7 @@ def main():
     portraits = utils.glob(REF_DIR, "[\w]+.jpg")
     reference_images = [detect.FaceImage(p) for p in portraits]
     # assuming only 1 face in each portrait
-    encoded_faces = [fd.find_faces(r)[0] for r in reference_images]
+    encoded_faces = [fd.find_faces(r).faces[0] for r in reference_images]
 
     reference_batch = detect.FaceBatch(encoded_faces, is_reference=True)
     pickled_fp = os.path.join(OUT_DIR, "reference_batch.p")
