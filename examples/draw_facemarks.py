@@ -21,10 +21,10 @@ def main():
     fd = detect.FaceDetector()  # can be different detectors
 
     face_image = detect.FaceImage(IMG)
-    face_image_results = fd.find_faces(face_image)
+    face_image = fd.find_faces(face_image)  # `FaceImage` with results
 
-    face_image_results.write_faces(OUTDIR)
-    # face_image_results.write_faces(OUTDIR, marked=True)
+    face_image.write_faces(OUTDIR)
+    # face_image.write_faces(OUTDIR, marked=True)
 
 
 if __name__ == "__main__":

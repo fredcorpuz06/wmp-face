@@ -56,6 +56,7 @@ class Face:
         self.thumbnail_landmarks = None
         self.encoding = self._encode_face()
         self.true_name = None
+        self.comparison = None
 
     def __repr__(self):
         return f"Face(source_name={self.source_name}," f"box={self.box})"
@@ -93,6 +94,7 @@ class FaceImage:
         self.image_data = self.read_image() if vid_frame is None else vid_frame
         self.faces = []
         self.true_names = None
+        self.comparison_names = None
 
     def __repr__(self):
         return f"FaceImage(source_name={source_name})"
@@ -103,9 +105,13 @@ class FaceImage:
     def retrieve_names(self):
         names = [f.true_name for f in self.faces]
         self.true_names = names
-        return {"source_name": self.source_name, "recognized_faces": names}
+        return self.true_names
 
-    def write_faces(self, outdir, marked=False):
+    def retrieve_comparisons(self):
+        comparisons = np.vstack([f.comparison for f in self.faces])
+        return self.comparison_names, comparisons
+
+    def write_faces(self, outdir, marked=False, named=False):
         if os.path.exists(outdir):
             shutil.rmtree(outdir)
 
@@ -113,11 +119,13 @@ class FaceImage:
 
         if marked:
             for i, face in enumerate(self.faces):
-                fp = os.path.join(outdir, f"{i}.jpg")
+                n = i if face.true_name is None else face.true_name
+                fp = os.path.join(outdir, f"{n}.jpg")
                 face.landmarks.save(fp)
         else:
             for i, face in enumerate(self.faces):
-                fp = os.path.join(outdir, f"{i}.jpg")
+                n = i if face.true_name is None else face.true_name
+                fp = os.path.join(outdir, f"{n}.jpg")
                 face.thumbnail_image.save(fp)
 
 
@@ -172,7 +180,7 @@ class FaceRecognizer(FaceBatch):
             ref_b = pickle.load(f)
         return ref_b.batch_faces
 
-    def predict_name(self, face: Face):
+    def predict_name(self, face: Face, store_comparisons=False):
         """Finds name given a `Face` object"""
 
         f_enc = np.repeat(face.encoding[np.newaxis, :], len(self.true_names), axis=0)
@@ -187,10 +195,19 @@ class FaceRecognizer(FaceBatch):
             # Multiple people match below threshold
             face.true_name = names[np.argmin(distance)]
 
+        if store_comparisons:
+            face.comparison = distance
+
         return face
 
-    def predict_names(self, faceimage: FaceImage):
-        [self.predict_name(f) for f in faceimage.faces]
+    def predict_names(self, faceimage: FaceImage, store_comparisons=False):
+        [
+            self.predict_name(f, store_comparisons=store_comparisons)
+            for f in faceimage.faces
+        ]
+        if store_comparisons:
+            faceimage.comparison_names = self.true_names
+
         return faceimage
 
 
