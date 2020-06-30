@@ -28,28 +28,24 @@ import pandas as pd
 def main():
     FACE_COMP_THRES = 0.6
     # TODO: implement batch size
-    # BATCH_SIZE = 50
     ENCODED_REF_DIR = "wmp/datasets/reference-encoded"
     UNKNOWNS_DIR = "wmp/datasets/facebook-ad-images"
+    VALIDATION_DIR = "wmp/datasets/sample-batch"
 
     fd = detect.FaceDetector()
     fr = detect.FaceRecognizer(ENCODED_REF_DIR)
 
-    img_locs = utils.glob(UNKNOWNS_DIR, "[\w]+.jpg")
+    img_locs = utils.glob(UNKNOWNS_DIR, "[\w]+.*")
     images = [detect.FaceImage(i) for i in img_locs]
 
     # can be multiple faces per image
-    img_results = [fd.find_faces(i) for i in images]  # list of FaceImages
-    img_results_named = [fr.predict_names(fi) for fi in img_results]
+    images = [fd.find_faces(i) for i in images]  # list of FaceImages
+    images = [fr.predict_names(i) for i in images]
 
-    dict_results = [i.retrieve_names() for i in img_results_named]
-    df = pd.DataFrame(dict_results)
-    print(df)
+    names = [i.retrieve_names() for i in images]
+    fr.write_validation(images, VALIDATION_DIR)
 
-    # TODO: Write thumbnail to correct folder, No_Person, Unknown
-    # _ = [fv.write_predictions(i) for i in img_results_named]
-
-    # utils.write(comp_matrix, "comparison_matrix.csv")
+    # TODO: Create comparison matrix
 
 
 if __name__ == "__main__":

@@ -100,7 +100,16 @@ class FaceImage:
         return f"FaceImage(source_name={source_name})"
 
     def read_image(self):
-        return np.array(Image.open(self.source_name))
+        ext = os.path.splitext(self.source_name)[-1]
+        image = Image.open(self.source_name)
+        if ext == ".jpg":
+            return np.array(image)
+        elif ext == ".png":
+            base = Image.new("RGB", image.size, "white")
+            image = Image.composite(image, base, image)
+            return np.array(image)
+
+        raise ValueError("Image isn't JPG or PNG")
 
     def retrieve_names(self):
         names = [f.true_name for f in self.faces]
@@ -193,7 +202,7 @@ class FaceRecognizer(FaceBatch):
             face.true_name = self.true_names[name_idxs[0]]
         else:
             # Multiple people match below threshold
-            face.true_name = names[np.argmin(distance)]
+            face.true_name = self.true_names[np.argmin(distance)]
 
         if store_comparisons:
             face.comparison = distance
@@ -209,6 +218,24 @@ class FaceRecognizer(FaceBatch):
             faceimage.comparison_names = self.true_names
 
         return faceimage
+
+    def write_validation(self, images, outdir):
+        if os.path.exists(outdir):
+            shutil.rmtree(outdir)
+
+        shutil.copytree(self.reference_folder, outdir)
+
+        for image in images:
+            if len(image.faces) == 0:
+                fp = os.path.split(image.source_name)[-1]
+                fp = os.path.join(outdir, "No_Person", fp)
+                shutil.copy2(image.source_name, fp)
+
+            for i, face in enumerate(image.faces):
+                sname = os.path.split(face.source_name)[-1]
+                sname = os.path.splitext(sname)[0]
+                fp = os.path.join(outdir, face.true_name, f"{sname}_{i}.jpg")
+                face.thumbnail_image.save(fp)
 
 
 class FaceValidator:
