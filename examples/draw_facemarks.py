@@ -1,36 +1,31 @@
-'''
+"""
 ================
 Draw facemarks
 ================
 
 In this example, we will demonstrate how wmp-face finds faces in input 
-images, crops out a face thumbnail and draws "facemarks"
+images, crops out a face thumbnail and
+ draws "facemarks"
 
-'''
+"""
 
 # Author: Frederick Corpuz <fcorpuz@wesleyan.edu>
 
 from wmp import detect, utils
 
 
-
 def main():
-    IMG = "../datasets/sample_image.jpg"
-    OUT_DIR = "../datasets/sample-facemarks/"
-    img_array = utils.load_image(IMG)
-    
-    fd = detect.FaceDetector() # can be different detectors
-    unknown_faces = fd.find_faces(img_array)
+    IMG = "wmp/datasets/sample_image.jpg"
+    OUTDIR = "wmp/datasets/sample-facemarks/"
 
-    cropped_faces = [f.image_data for f in unknown_faces]
-    marked_faces = [f.draw_landmarks() for f in unknown_faces]
+    fd = detect.FaceDetector()  # can be different detectors
 
-    utils.write_images(
-        cropped_faces, folder=OUT_DIR, basename="face_thumbnails", 
-        filetype="jpg")
+    face_image = detect.FaceImage(IMG)
+    face_image = fd.find_faces(face_image)  # `FaceImage` with results
 
-    utils.write_images(
-        cropped_faces, folder=OUT_DIR, basename="facemarks", filetype="jpg")
+    face_image.write_faces(OUTDIR)
+    # face_image.write_faces(OUTDIR, marked=True)
+
 
 if __name__ == "__main__":
     main()

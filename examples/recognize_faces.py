@@ -1,11 +1,11 @@
-''' 
+""" 
 ==========================
 Recognize faces in 1 image
 ==========================
 
-In this example, we will demonstrate how wmp-face finds faces in input images,
-crop out a face thumbnail and predicts a name
-'''
+In this example, we will demonstrate how wmp-face finds faces in input
+images, crop out a face thumbnail and predicts a name
+"""
 
 # Author: Frederick Corpuz <fcorpuz@wesleyan.edu>
 
@@ -14,21 +14,24 @@ from wmp import detect, utils
 
 def main():
     FACE_COMP_THRES = 0.6
-    ENCODED_REF_DIR = "../datasets/reference-encoded"
-    NEW_IMG = "../datasets/sample_image.jpg"
+    ENCODED_REF_DIR = "wmp/datasets/reference-encoded"
+    IMG = "wmp/datasets/sample_image.jpg"
+    OUTDIR = "wmp/datasets/sample-facemarks/"
 
-    fr = detect.FaceRecognizer(ref_batch)
-    fd = detect.FaceDetector(ENCODED_REF_DIR)
-    
-    img_array = utils.load_image(NEW_IMG)
-    unknown_faces = fd.find_faces(img_array)
+    fd = detect.FaceDetector()
+    fr = detect.FaceRecognizer(ENCODED_REF_DIR)
 
-    predicted_names = [fr.predict_name(f) for f in unknown_faces]
-    print(predicted_names)
-    # TODO: return comparison matrix
-    # TODO: write face thumbnails w/ predicted names
+    face_image = detect.FaceImage(IMG)
+    face_image = fd.find_faces(face_image)  # `FaceImage` with results
 
-    
+    face_image = fr.predict_names(face_image, store_comparisons=True)
+
+    print(face_image.retrieve_names())
+    ns, distances = face_image.retrieve_comparisons()
+    print(ns)
+    print(distances)
+    face_image.write_faces(OUTDIR)
+
 
 if __name__ == "__main__":
     main()
