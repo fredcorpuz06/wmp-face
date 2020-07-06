@@ -1,5 +1,8 @@
 *.pyc
 *.egg-info
+build
+dist
+tokens
 _build
 .vscode
 .DS_Store
