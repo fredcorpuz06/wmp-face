@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="wmp",
-    version="0.1.0",
+    version="0.2.0",
     author="Frederick Corpuz",
     author_email="fcorpuz@wesleyan.edu",
     description="Module for face detection & recognition",
@@ -13,7 +13,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://wmp-face.readthedocs.io",
     packages=setuptools.find_packages(),
-    package_data={"wmp": ["datasets/*.jpg", "datasets/*.mp4"]},
+    package_data={"wmp": ["datasets/*.jpg", "datasets/*.mp4", "models/*.dat"]},
     install_requires=["dlib>=19.20.0", "numpy>=1.19.0", "Pillow>=7.2.0"],
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -4,13 +4,20 @@ import numpy as np
 import shutil
 import os
 import pickle
+from pkg_resources import resource_filename
+
 
 # Trained facial shape predictor and recognition model from:
 
 # http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2
-FACE_LANDMARKS_68 = "wmp/models/shape_predictor_68_face_landmarks.dat"
+FACE_LANDMARKS_68 = resource_filename(
+    __name__, "models/shape_predictor_68_face_landmarks.dat"
+)
+
 # http://dlib.net/files/dlib_face_recognition_resnet_model_v1.dat
-FACE_RECOGNITION_MODEL = "wmp/models/dlib_face_recognition_resnet_model_v1.dat"
+FACE_RECOGNITION_MODEL = resource_filename(
+    __name__, "models/dlib_face_recognition_resnet_model_v1.dat"
+)
 
 detector = dlib.get_frontal_face_detector()
 sp = dlib.shape_predictor(FACE_LANDMARKS_68)
