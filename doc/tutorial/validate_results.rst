@@ -1,8 +1,8 @@
 .. _verifying_face_results:
 
-================================
+==================================================
 Manually verifying facial recognition results
-================================
+==================================================
 
 The goal of this guide is to explore some of the main ``wmp-face`` tools on a 
 single task: recognizing all the faces in a batch of images
@@ -30,7 +30,7 @@ Irure ut laborum mollit proident aute cillum eiusmod eu occaecat::
 
 
 Moving images to correct classification
----------------------------------
+-----------------------------------------
 
 Irure ut laborum mollit proident aute cillum eiusmod eu occaecat::
 
@@ -41,8 +41,11 @@ Irure ut laborum mollit proident aute cillum eiusmod eu occaecat::
 Output folder structure
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+laborum mollit proident aute cillum eiusmod eu occaecat
+
+
 Comparing predictions to validated set
------------------------------------
+--------------------------------------------
 
 Irure ut laborum mollit proident aute cillum eiusmod eu occaecat::
 

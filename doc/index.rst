@@ -24,10 +24,10 @@ wmp-face.
 .. toctree::
    :maxdepth: 2
    
-   getting_started
    install
-   tutorial_face_batch
-   tutorial_validating_results
+   getting_started
+   tutorial/index
+
 
 
 
