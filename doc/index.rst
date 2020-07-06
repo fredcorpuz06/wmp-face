@@ -26,6 +26,8 @@ wmp-face.
    
    getting_started
    install
+   tutorial_face_batch
+   tutorial_validating_results
 
 
 

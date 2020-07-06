@@ -1,6 +1,5 @@
 *.pyc
 *.egg-info
-_build
 .vscode
 .DS_Store
 env
