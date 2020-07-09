@@ -27,6 +27,7 @@ wmp-face.
    install
    getting_started
    tutorial/index
+   example/index
 
 
 
